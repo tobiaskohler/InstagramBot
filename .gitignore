@@ -132,8 +132,5 @@ dmypy.json
 nginx/.htpasswd 
 .DS_Store
 env/
-bot/__pycache__/
-webapp/__pycache__/
-webapp/bot/__pycache__/
-webapp/users/__pycache__/
-
+# ignores all pychaches
+**__pycache__
