@@ -1,0 +1,109 @@
+version: "3.7"
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_ERLANG_COOKIE: 'SWQOKODSQALRPCLNMEQG'
+      RABBITMQ_DEFAULT_USER: 'user123'
+      RABBITMQ_DEFAULT_PASS: 'password123'
+      RABBITMQ_DEFAULT_VHOST: '/webapp'
+    # ports:
+    #   - "15672:15672"
+    #   - "5672:5672"
+    volumes:
+      - rabbitmq_storage:/var/lib/rabbitmq  #adapt host-side (left) to your respective directory
+
+
+  db:
+    image: mariadb
+    restart: always
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password123'
+      MYSQL_USER: 'user123'
+      MYSQL_PASSWORD: 'password123'
+      MYSQL_DATABASE: 'webapp'
+    # ports:
+    #   - "3306:3306"
+    volumes:
+      - db_storage:/var/lib/mysql
+
+
+  nginx:
+    build: ./nginx  
+    container_name: nginx
+    restart: always
+    ports:         #ports allows to map ports from HOST:CONTAINER (Port 80 on Host equals Port 80 of nginx Container)
+      - "80:80"
+
+
+  web:
+    build:
+      context: ./web
+      shm_size: 3gb
+    shm_size: 3gb  #searches for dockerfiles in the named dir and installs container from that dockerfile
+    container_name: web
+    hostname: web
+    restart: always
+    environment:    #passes environment variables to flask (you could pass DB_USERNAME e.g. also)
+      FLASK_DEBUG: 'True'
+      FLASK_APP: 'flask_app.py'
+    expose:         #exposes only within internal docker network, so flask will be exposed to port 8080 of the  docker internal network. since the uWSGI config (app.ini) listens to port 8080, this is the appropriate configuration
+      - 8080
+    depends_on:     #docker-compose up will start services in dependency order, so first nginx and mariadb will be started, dann flask framework
+      - nginx
+      - db
+      - rabbitmq
+    # tty: true
+    # stdin_open: true
+
+
+
+  beat:
+    build:
+      context: ./web
+      shm_size: 2gb
+    shm_size: 2gb
+    container_name: beat
+    hostname: beat
+    restart: always
+    command: celery -A tasks.celery beat --loglevel=info
+    depends_on:
+      - rabbitmq
+
+
+
+  celery:
+    build:
+      context: ./web
+      shm_size: 2gb
+    shm_size: 2gb 
+    container_name: celery
+    hostname: celery
+    restart: always
+    command: celery -A tasks.celery worker --loglevel=info --without-mingle --without-gossip
+    #command: celery -A tasks.celery worker --loglevel=info --without-mingle --without-gossip --without-heartbeat
+    #command: celery -A tasks.celery worker --loglevel=info
+    depends_on:     
+      - rabbitmq
+
+
+
+  # adminer:        #only for development purposes
+  #   image: adminer
+  #   container_name: adminer
+  #   restart: always
+  #   ports:
+  #     - "8081:8080" #port 8080 must be on right side, never change that
+  #   depends_on:
+  #     - db
+
+
+volumes:                                    #all volumes can be found in docker file directory on the host
+  db_storage:
+  rabbitmq_storage:
+
