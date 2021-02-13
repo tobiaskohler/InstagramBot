@@ -1,0 +1,132 @@
+{% extends 'core.html' %}
+{% block content %}
+
+<div align="center">
+  <h1>Instagram Bot</h1>
+    <span>Version 0.4</span>
+    <p class="text-info">eingeloggt als: <span class="badge badge-secondary">{{ current_user.username }}</span></hp>
+</div>
+
+
+
+<!-- Hauptsteuerungs-Container -->
+<div class="container">
+  <div class="jumbotron">
+
+     <!-- tabbable panes of local content -->
+     <nav>
+       <div class="nav nav-tabs" id="nav-tab" role="tablist">
+         <a class="nav-item nav-link active" id="targets-tab" data-toggle="tab" href="#targets" role="tab" aria-controls="nav-targets" aria-selected="true">Neue Targets</a>
+         <a class="nav-item nav-link" id="workflow-tab" data-toggle="tab" href="#workflow" role="tab" aria-controls="nav-workflow" aria-selected="false">Workflow</a>
+       </div>
+     </nav>
+    <!-- neue targets -->
+
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="targets" role="tabpanel" aria-labelledby="targets-tab">
+
+        <br />
+
+        <h2>Neue Targets laden</h2>
+
+        <div class="row">
+
+          <div class="col-sm-6">
+
+            <form method="POST">
+                {{form.TargetsLaden.hidden_tag()}}
+                <div class="form-group">
+                <span class="badge badge-dark">Login</span>
+                  {{form.TargetsLaden.username.label (class="form-control-label")}}<br />
+                  {{form.TargetsLaden.username (class="form-control form-control-lg")}}<br />
+                <span class="badge badge-dark">Login</span>
+                  {{form.TargetsLaden.password.label (class="form-control-label")}}<br />
+                  {{form.TargetsLaden.password (class="form-control form-control-lg")}}<br />
+                </div>
+                <div class="form-group">
+                <span class="badge badge-dark">URL</span>
+                  {{form.TargetsLaden.zielurl.label (class="form-control-label")}}<br />
+                  {{form.TargetsLaden.zielurl (class="form-control form-control-lg")}}<br />
+                </div>
+                {{form.TargetsLaden.submit (class="btn btn-primary")}}
+            </form>
+          <br />
+          </div>
+         
+
+          <div class="col-sm-6">
+            <h4>Targets in Pipeline: <span class="badge badge-success">{{targets_raw|length}}</span></h4>
+            
+            <div class="pre-scrollable">
+              <table class="table table-bordered table-striped mb-0" id="overview-targets">
+                <thead>
+                  <tr>
+                    <th scope="col">URL</th>
+                    <th scope="col">Source</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for target in targets_raw %}
+                    <tr>
+                      <td>{{target.target_url}}</td>
+                      <td><a href={{target.targets_raw_quelle.source_url}} target="_blank">{{target.source_id}}</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- neuer workflow starten -->
+
+      <div class="tab-pane fade" id="workflow" role="tabpanel" aria-labelledby="workflow-tab">
+        <div class="tab-pane fade show active" id="workflow" role="tabpanel" aria-labelledby="workflow-tab">
+
+          <br />
+
+          <h2>Workflow starten</h2>
+
+          <div class="row">
+
+            <div class="col-sm-12">
+
+              <form method="POST">
+                  {{form.StartWorkflow.hidden_tag()}}
+
+                  <div class="form-group">
+                  <span class="badge badge-dark">Login</span>
+                  {{form.TargetsLaden.username.label (class="form-control-label")}}<br />
+                  {{form.TargetsLaden.username (class="form-control form-control-lg")}}<br />
+                  <span class="badge badge-dark">Login</span>
+                  {{form.TargetsLaden.password.label (class="form-control-label")}}<br />
+                  {{form.TargetsLaden.password (class="form-control form-control-lg")}}<br />
+                  </div>
+
+                  {{form.StartWorkflow.submit2 (class="btn btn-primary")}}
+              </form>
+
+            </div>
+
+          </div>
+
+        </div>
+        
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<input type="button" onclick="location.href='/test';" value="TEST" />
+
+<br />
+
+</div>
+
+{% endblock %}

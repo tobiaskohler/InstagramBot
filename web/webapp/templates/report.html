@@ -1,0 +1,127 @@
+{%extends "core.html"%}
+{%block content%}
+
+<div class="container">
+
+    <div align="center">
+        <h3>Statistik</h3>
+        <span>per {{datum}}</span>
+    </div>
+    <br>
+    <div class="container">
+        <h4 align="center">Gesamtaktivität (30 Tage)</h4>
+
+        <!-- Instagram-Abonnenten vs. Abonniert -->
+        <div class="dashboard-container">
+            <div class="row">
+                <div class="col-sm-2">
+                    <p class="dashboard-headline">Abonnenten</p>
+                    <p class="dashboard-number purple">{{anzahlAbonnenten}}</p>
+                </div>
+                <div class="col-sm-3">
+                    <p class="dashboard-headline">Abonniert</p>
+                    <p class="dashboard-number purple">{{anzahlAbonniert}}</p>
+                    <p class="dashboard-ratio" data-toggle="tooltip" data-placement="top" title="Sollte größer 100% sein">{{ratioAbonnentenAbonniert}} %</p>
+                </div>
+                <div class="col-sm-3">
+                        <p class="dashboard-headline">Bearbeitete Accounts</p>
+                        <p class="dashboard-number blue">{{anzahlTargetsTotal}}</p>
+                </div>
+                <div class="col-sm-1">
+                        <p class="dashboard-headline">Likes</p>
+                        <p class="dashboard-number blue">{{anzahlLikesTotal}}</p>
+                </div>
+                <div class="col-sm-3">
+                        <p class="dashboard-headline">Follows</p>
+                        <p class="dashboard-number blue">{{anzahlFollowsTotal}}</p>
+                        <p class="dashboard-ratio" data-toggle="tooltip" data-placement="top" title="Wenn kleiner 100%, dann wurden mehr private Accounts bearbeitet">{{ratioLikesFollows}} %</p>
+                </div>
+            </div>
+
+    <br>
+    
+        <!-- RÜckfolgequoten -->
+        
+        <h4>Rückfolgequoten</h4>
+            <div class="row">
+                <div class="col-sm-4">
+                    <p class="dashboard-headline">{{anzahlMatches}} total Matches</p>
+                    <p class="dashboard-number green" data-toggle="tooltip" data-placement="top" title="Je höher desto besser!">{{ratioFollowedBack}} %</p> 
+                    <p class="dashboard-ratio">{{anzahlFollowedBack}}</p>
+                </div>
+                <div class="col-sm-4">
+                    <p class="dashboard-headline">von {{anzahlTargetsTotalPublic}} öffentlichen Accounts</p>
+                    <p class="dashboard-number green" data-toggle="tooltip" data-placement="top" title="Je größer desto besser!">{{ratioLikersFollowedBack}} %</p>
+                    <p class="dashboard-ratio">{{anzahlLikersFollowedBack}}</p>
+                </div>
+                <div class="col-sm-4">
+                    <p class="dashboard-headline">von {{anzahlTargetsTotalPrivate}} privaten Accounts</p>
+                    <p class="dashboard-number green" data-toggle="tooltip" data-placement="top" title="Je größer desto besser!">{{ratioFollowersFollowedBack}} %</p>
+                    <p class="dashboard-ratio">{{anzahlFollowersFollowedBack}}</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<br>
+
+<div class="container">
+    
+        <div class="pre-scrollable">
+            <table class="table table-bordered table-striped mb-0" id="overview-targets">
+            <thead>
+                <tr>
+                <th scope="col">Verräter-URL</th>
+                <th scope="col">seit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key,value in historical_follower_dict.items() %}
+                <tr>
+                    <td><a href="{{key}}" target="_blank">{{key}}</a></td>
+                    <td>{{value}}</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    
+</div>
+
+<br>
+
+    {% for key,value in source_ids_statistics_dict.items() %}
+    <div class="container">
+
+    <h4 align="center">Rückfolgequoten für: <span class="badge badge-secondary">{{key}}</span></h4>
+    <div align="center"><span class="badge badge-light"><a href="{{value['url']}}" target="_blank">auf Instagram ansehen</a></span></div>
+    
+        <!-- RÜckfolgequoten -->
+        <div class="dashboard-container">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <p class="dashboard-headline">{{value['matches']}} Matches</p>
+                        <p class="dashboard-number green" data-toggle="tooltip" data-placement="top" title="Je höher desto besser!">{{value['followed_back_ratio']}} %</p> 
+                        <p class="dashboard-ratio">{{value['followed_back']}}</p>
+                    </div>
+                    <div class="col-sm-4">
+                        <p class="dashboard-headline">{{value['likes']}} öffentliche Accounts</p>
+                        <p class="dashboard-number green" data-toggle="tooltip" data-placement="top" title="Je größer desto besser!">{{value['likers_followed_back_ratio']}} %</p>
+                        <p class="dashboard-ratio">{{value['likers_followed_back']}}</p>
+                    </div>
+                    <div class="col-sm-4">
+                        <p class="dashboard-headline">{{value['follows']}} private Accounts</p>
+                        <p class="dashboard-number green" data-toggle="tooltip" data-placement="top" title="Je größer desto besser!">{{value['followers_followed_back_ratio']}} %</p>
+                        <p class="dashboard-ratio">{{value['followers_followed_back']}}</p>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <br>
+
+        {% endfor %}
+
+{%endblock%}

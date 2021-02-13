@@ -1,0 +1,71 @@
+{% extends "core.html" %}
+{% block content %}
+
+
+
+<div align="center">
+  <h3>Aktivität</h3>
+    <span:>Stand: {{date}} | {{timestamp}}</span><br>
+    <br>
+
+    <div class="dashboard-container">
+      <div class="row">
+
+        <div class="col sm-6">
+          <p class="dashboard-headline">Aktueller Task: {{task_id}}</p>
+          <p class="dashboard-headline">läuft seit (UTC): {{time_started}}</p>
+        </div>
+
+        <div class="col sm-6">
+          <p class="dashboard-headline">Bearbeitet: {{total_targets_today}}</p>
+          <p class="dashboard-headline">Follows: {{total_follows_today}}/350</p>
+          <p class="dashboard-headline">Likes: {{total_likes_today}}/525</p>
+          <p class="dashboard-headline">Unfollows: {{total_unfollows_today}}</p>
+        </div>
+      </div>
+
+    </div>
+</div>
+  
+  <br>
+<div class="container">
+  <div class="pre-scrollable">
+  
+    <table class="table table-bordered table-striped mb-0" id="overview-targets">
+      <thead>
+        <tr>
+
+            <th scope="col">URL</th>
+            <th scope="col">Liked</th>
+            <th scope="col">Followed</th>
+            <th scope="col">Unfollowed</th>
+        </tr>
+        </thead>
+        <tbody id="taskstatus"></tbody>
+    </table>
+    
+  </div>
+</div>
+<script>
+
+$(function (){
+
+  var $taskstatus = $('#taskstatus');
+
+  $.ajax({
+    type: 'GET',
+    url: '/taskstatus',
+    dataType: 'json',
+    success: function(data) {
+      $.each(data.taskstatus, function(i, value) {
+        $taskstatus.append('<tr>'+'<td>'+value['target_url']+'</td>' + '<td>'+value['pics_liked']+'</td>' + '<td>'+value['followed']+'</td>' + '<td>'+value['unfollowed']+'</td>' + '</tr>');
+        //$taskstatus.append('<tr>'+'<td>'+value['target_url']+'</td>' + '<td>'+value['pics_liked']+'</td>' + '<td>'+value['followed']+'</td>' + '<td>'+value['unfollowed']+'</td>' + '<td>'+value['check0']+'</td>' + '<td>'+value['check1']+'</td>' + '<td>'+value['check2']+'</td>' + '<td>'+value['check3']+'</td>' + '<td>'+value['check4']+'</td>' + '<td>'+value['check5']+'</td>' + '<td>'+value['check6']+'</td>' + '</tr>');
+
+      });
+    }
+  });
+});
+
+</script>
+
+{% endblock %}

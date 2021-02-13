@@ -1,0 +1,63 @@
+.table-indent-small{
+    text-indent: 20px;
+}
+
+.table-indent-medium{
+    text-indent: 30px;
+}
+
+.table-indent-large{
+    text-indent: 60px;
+}
+
+@media (max-width: 767px){
+
+    body { 
+       font-size: 12px; 
+    }
+ 
+ }
+
+ .dashboard-container{
+    text-align:center;
+    border-radius:10px;
+    border: 1px solid #6C757D;
+ }
+
+ .dashboard-headline{
+     margin:10px;
+     font-size:15px;
+     font-weight: bold;
+ }
+ 
+ .dashboard-number{
+    border-radius:10px;
+    font-size:30px;
+    display: inline-block;
+    padding: 5px;
+    border: 1px solid rgb(247, 239, 239);
+    background: #fff;
+ }
+
+.dashboard-ratio{
+    position:absolute;
+    border-radius:5px;
+    font-size:15px;
+    display: inline-block;
+    margin-left:5px;
+    bottom:0;
+    border: 1px solid rgb(247, 239, 239);
+    background: #fff;
+}
+ 
+.blue{
+    background-image: linear-gradient(to bottom right, #0074D9, #39CCCC)
+}
+
+.green{
+    background-image: linear-gradient(to bottom right, #2ECC40, #01FF70 )
+}
+
+.purple{
+    background-image: linear-gradient(to bottom right, #85144b, #F012BE )
+}

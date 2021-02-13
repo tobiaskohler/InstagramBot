@@ -1,0 +1,30 @@
+{% extends 'core.html' %}
+{% block content %}
+
+<div align="center">
+
+<h1>Login</h1>
+    <!-- Login Form -->
+    <div class="col-sm-4">
+      <div class="jumbotron">
+
+        <form method="POST">
+            {{form.hidden_tag()}}
+            <div class="form-group">
+              {{form.username.label (class="form-control-label")}}<br />
+              {{form.username (class="form-control form-control-lg")}}<br />
+            </div>
+            <div class="form-group">
+              {{form.password.label (class="form-control-label")}}<br />
+              {{form.password (class="form-control form-control-lg")}}<br />
+            </div>
+
+            {{form.submit(class="btn btn-primary")}}
+        </form>
+
+      </div>
+    </div>
+
+<span class="text-muted"><a href="{{url_for('users.register')}}">Register</a></span>
+</div>
+{% endblock %}

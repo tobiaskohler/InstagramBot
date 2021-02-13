@@ -1,0 +1,58 @@
+{%extends "core.html"%}
+{%block content%}
+
+<div class="container">
+
+    <div align="center">
+        <h3>Blacklist</h3>
+        <span>per {{datum}}</span>
+    </div>
+
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-sm-6">
+                <h2>Neuer Eintrag</h2>
+
+                <form method="POST">
+                        {{formNewBlacklistEntries.hidden_tag()}}
+                        <div class="form-group">
+                        <span class="badge badge-dark">URL</span>
+                        {{formNewBlacklistEntries.url.label (class="form-control-label")}}<br />
+                        {{formNewBlacklistEntries.url (class="form-control form-control-lg")}}<br />
+                        {{formNewBlacklistEntries.submit (class="btn btn-primary")}}<br />
+                        </div>
+                </form>
+            </div>
+
+            <div class="col-sm-6">
+                <h2>Blacklist</h2>
+
+                <div class="pre-scrollable">
+                    <table class="table table-bordered table-striped mb-0" id="overview-targets">
+                        <thead>
+                        <tr>
+                            <th scope="col">URL</th>
+                            <th scope="col">seit (Datum)</th>
+                            <th scope="col">Löschen</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in blacklist_all %}
+                            <tr>
+                            <td>{{entry.url}}</td>
+                            <td>{{entry.datum}}</td>
+                            <td><form method=post action="{{ url_for('bot.delete', id=entry.id) }}"><button class="btn btn-sm btn-danger">entfernen</button></form></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    
+    </div>
+
+</div>
+
+{%endblock%}
