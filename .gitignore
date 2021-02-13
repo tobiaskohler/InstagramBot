@@ -129,11 +129,11 @@ dmypy.json
 .pyre/
 
 
-/nginx/.htpasswd 
+nginx/.htpasswd 
 .DS_Store
-/env/
-/bot/__pycache__/
-/webapp/__pycache__/
-/webapp/bot/__pycache__/
-/webapp/users/__pycache__/
+env/
+bot/__pycache__/
+webapp/__pycache__/
+webapp/bot/__pycache__/
+webapp/users/__pycache__/
 

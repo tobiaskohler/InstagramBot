@@ -39,7 +39,6 @@ def index():
         #Celery-Task, siehe tasks.py
         logging.debug("Task GET_TARGETS gestartet")
         task = tasks.NeueTargetsLaden.delay(username_from_formTargetsLaden, password_from_formTargetsLaden, url_from_formTargetsLaden)
-        #task = celery.send_task('CheckLists', [username_from_formTargetsLaden, password_from_formTargetsLaden, url_from_formTargetsLaden])
 
         task_id = task.id
         task_type = "GET_TARGETS"
@@ -58,13 +57,6 @@ def index():
         #Celery-Task, siehe tasks.py
         logging.debug("Task START_WORKFLOW gestartet")
         task = tasks.WorkflowStarten.delay(username_from_formStartWorkflow, password_from_formStartWorkflow)
-        #task = celery.send_task('WorkflowStarten', [username_from_formStartWorkflow, password_from_formTargetsLaden])
-
-        # task_id = task.id 
-        # task_type = "WORKFLOW"
-        # task_id_to_db = Tasks(task_id, task_type)
-        # db.session.add(task_id_to_db)
-        # db.session.commit()
 
         return redirect(url_for("bot.output"))
 
@@ -76,17 +68,6 @@ def context_processor():
 
     i = tasks.celery.control.inspect()
     activetasks = i.active()
-
-    # list_of_tasks = {'activetasks': activetasks}
-    # print(list_of_tasks)
-
-    # if not list_of_tasks['activetasks']['celery@web']:
-    #     task_existence=0
-    #     return dict(task_existence=task_existence)
-
-    # else:
-    #     task_existence=1
-    #     return dict(task_existence=task_existence)
 
     if not activetasks:
         task_existence=0
@@ -227,8 +208,6 @@ def output():
     list_of_tasks = {'activetasks': activetasks, 'scheduledtasks': scheduledtasks, 'reservedtasks': reservedtasks}
     task_id = "no active Task"
 
-    # if not list_of_tasks['activetasks']:
-    #     return render_template('output.html', date=date, timestamp=timestamp, task_id=task_id)
 
     if not activetasks:
         return render_template('output.html', date=date, timestamp=timestamp, task_id=task_id)
@@ -266,8 +245,6 @@ def output():
 @login_required
 def stop():
     #get youngest task_id (currently running)
-    # current_timestamp = date + ' ' + timestamp
-    # current_task = db.session.query(Tasks).order_by(desc('timestamp')).first()
 
     #get list of all tasks and look if one task is active or not
     i = tasks.celery.control.inspect()
@@ -281,8 +258,6 @@ def stop():
         if "celery@" in key:
             host_id = key
 
-    # if not list_of_tasks['activetasks']['celery@web']:
-    #     print("NO active task running!")
 
     if not activetasks:
         print("NO active tasks running")
@@ -295,97 +270,3 @@ def stop():
         print(f"Task {task_id} got killed!")    #geht nur mit PREFORK unter LINUX (EVENTLET UNTERSTÜZT REVOKE NICHT)
 
     return redirect(url_for("bot.output"))
-
-
-# @bot.route('/taskstatus', methods=['GET', 'POST'])
-# @login_required
-# def statusupdate():
-#     task_status = Taskstatus.query.all()
-#     task_status_schema = TaskstatusSchema(many=True)
-#     output = task_status_schema.dump(task_status).data
-#     return jsonify({"taskstatus": output})
-
-
-###########TEST ROUTE
-# @bot.route('/test', methods=['GET', 'POST'])
-# @login_required
-# def test():
-    #pass
-    # source_ids = Source.query.all()
-    # source_ids_dict = dict()
-    
-    # source_ids_statistics_dict = dict()
-
-    # #get all source_ids
-    # for elem in source_ids:
-    #     source_ids_dict[elem.id] = elem.source_url
-
-    # for key, value in source_ids_dict.items():
-
-    #     total_per_source = Targets_done.query.filter_by(source_id=key).count()
-    #     total_per_source_davon_matches = Targets_done.query.filter_by(source_id=key, match="ja").count()
-    #     total_per_source_davon_likes = Targets_done.query.filter(and_(Targets_done.source_id==key, Targets_done.match=="ja", Targets_done.pics_liked>=0)).count()
-    #     total_per_source_davon_follows = Targets_done.query.filter(and_(Targets_done.source_id==key, Targets_done.match=="ja", Targets_done.pics_liked==None)).count()
-    #     total_per_source_followed_back = Targets_done.query.filter(and_(Targets_done.source_id==key, Targets_done.followed_back>=0)).count()
-
-    #     source_ids_statistics_dict[key] = {"total": total_per_source, "matches": total_per_source_davon_matches,
-    #                                         "likes": total_per_source_davon_likes, "follows": total_per_source_davon_follows,
-    #                                         "followed_back": total_per_source_followed_back}
-
-        
-
-
-    # for key,value in source_ids_statistics_dict.items():
-    #     print(f"Source_ID {key}")
-    #     print(f"Total {value['total']}")
-    #     print(f"davon matches {value['matches']}")
-
-        #gesamtanzahl
-        #davon matches
-        #davon likes
-        #davon follows
-        #rückfolgequote
-
-
-    # target_url_anzahl_abonnent_match = Targets_done.query.filter_by(target_url="test").first()
-    # print(target_url_anzahl_abonnent_match.match)
-
-    # target_url_anzahl_abonnent_match.match = "yes"
-
-    # db.session.commit()
-
-    # target_url_anzahl_abonnent_match = Targets_done.query.filter_by(target_url="test").first()
-    # print(target_url_anzahl_abonnent_match.match)
-
-
-    # db_query_targets_raw_targes_url = Targets_raw.query.with_entities(Targets_raw.target_url)   #db query, abfrage von einer tabellenspalte
-    # liste = []
-
-    # for elem in db_query_targets_raw_targes_url:
-    #     liste.append(elem[0])
-
-
-
-    # abonniertLina = ["test", "https://www.instagram.com/ibf_searching_foryou/"]
-    # neuAbonniert = []
-
-    # for item in abonniertLina:
-
-    #     db_entry_check = Abonniert.query.filter_by(target_url=target_url).scalar()
-    #     #db_query_abonniert_abonniet_url = Abonniert.query.with_entities(Abonniert.datum)   #db query, abfrage von einer tabellenspalte
-
-    #     print(db_entry_check[1])
-
-    #     if db_entry_check is None:
-    #         logging.debug(f"...{item} erfasst!")
-    #         print(f"...{item} erfasst!")
-    #         neuAbonniert.append(item)
-    #         abonniert = Abonniert(item)
-    #         db.session.add(abonniert)
-    #         db.session.commit()
-
-    #     else:
-    #         logging.debug(f"{item} bereits in Datenbank")
-    #         print(f"{item} bereits in Datenbank")
-
-    #return render_template('test.html')
